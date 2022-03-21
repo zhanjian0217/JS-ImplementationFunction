@@ -1,48 +1,48 @@
-// 程式碼寫這裡
-const closeBtn = document.querySelectorAll(".closeBtn")
-const txt = document.querySelector("#taskInput")
-const addBtn = document.querySelector("#addBtn")
-const ul = document.querySelector(".todo-list")
+function createTodoItem(text) {
+  const todo = document.createElement("li")
+  todo.className = "todo-item"
 
-closeBtn.forEach((e) => {
-  e.addEventListener("click", ()=> {
-    e.parentElement.remove()
-  })
-})
-
-addBtn.addEventListener("click", () => {
-  const li = document.createElement("li")
   const span = document.createElement("span")
-  const close = document.createElement("button")
+  span.className = "item"
+  span.textContent = text
 
-  li.classList.add("todo-item")
-  span.classList.add("item")
-  close.classList.add("closeBtn")
+  const btn = document.createElement("button")
+  btn.className = "closeBtn"
+  btn.textContent = "X"
 
-  close.textContent = "X"
-  span.textContent = txt.value
+  todo.appendChild(span)
+  todo.appendChild(btn)
 
+  return todo
+}
 
-  
-  li.appendChild(span)
-  li.appendChild(close)
-  
-  if (txt.value !== "") {
-    ul.insertAdjacentElement("afterbegin", li ) 
-    txt.value = "" 
-  }else{
-    alert("請輸入內容")
+function addItemInContainer(container, input) {
+  if (input.value.trim() !== "") {
+    const todo = createTodoItem(input.value)
+    container.insertAdjacentElement("afterbegin", todo)
   }
 
-  close.addEventListener("click", () => {
-    close.parentElement.remove()
-  })
+  input.value = ""
+  input.focus()
+}
 
-})
+function addTodo() {
+  const container = document.querySelector(".todo-list")
+  const input = document.querySelector("#taskInput")
+  addItemInContainer(container, input)
+}
 
-document.addEventListener("keypress", (e)=> {
-  if (e.keyCode === 13){
-    return addBtn.click()
+document.querySelector("#addBtn").addEventListener("click", addTodo)
+
+document.querySelector("#taskInput").addEventListener("keyup", (e) => {
+  if (e.key === "Enter") {
+    addTodo()
   }
 })
-  
+
+// 事件委任 event delegation
+document.querySelector(".todo-list").addEventListener("click", (e) => {
+  if (e.target.matches("button")) {
+    e.target.parentElement.remove()
+  }
+})
