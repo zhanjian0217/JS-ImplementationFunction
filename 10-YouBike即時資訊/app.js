@@ -1,81 +1,45 @@
-// 程式碼寫這裡
 const API = "https://tcgbusfs.blob.core.windows.net/dotapp/youbike/v2/youbike_immediate.json"
 
-const search = document.querySelector("#searchKeyword")
-const Btn = document.querySelector(".btn btn-success fs-3")
+const textInput = document.querySelector("#searchKeyword")
+const Btn = document.querySelector(".btn-success")
+const ul = document.querySelector(".siteList")
+
+
+Btn.addEventListener("click", (e) =>{
+  e.preventDefault()
+  getBikes(textInput.value)
+} )
 
 
 
-async function getBike() {
+
+
+
+async function getBikes(street) {
   const rawData = await fetch(API)
   const bikes = await rawData.json()
 
-  const ul = document.querySelector(".siteList") 
 
-
-
-  // li.appendChild(i)
-  // li.textContent = "1323123123213"
-  // li.appendChild(aaa)
-
-
-  bikes.forEach((bike) => {
-    const SNA = document.createElement("li")
-    SNA.className = "list-group-item fs-5"
-    SNA.textContent = bike.sna 
-
-
-    const icon = document.createElement("i")
-    icon.className = "fas fa-bicycle"
-
-    const aaa = document.createElement("small")
-    aaa.className = "text-muted"
+  const bikeData = 
+   bikes.filter(data => data.ar.includes(street))
+    // console.log(bikeData);
+   //  (bike.ar).includes(street)
+    //  return bike })
     
-    SNA.appendChild(icon)
-    SNA.appendChild(aaa)
+      
+    if(street.trim() !== ""){
+      bikeData.forEach((x) => {
+      const result = 
+        `<li class="list-group-item fs-5">
+          <i class="fas fa-bicycle"></i>
+          ${x.sna.replace("YouBike2.0_","")} (${x.sbi})<br>
+          <small class="text-muted">${x.ar})</small>
+          </li>`
 
-    
-    
-    
-    
-    ul.appendChild(SNA) 
-  })
+        ul.insertAdjacentHTML("afterbegin", result) 
+    })
+
+  }
   
 
-
-
-
-
-
-  // Btn.addEventListener("click", () => {
-    // bikes.forEach((bike) =>{
-    // console.log(bike.sna);
-    // li.textContent = `${bike.sna}`
-    // console.log(li);
-    // ul.insertAdjacentElement("afterbegin", li)
-// })
-
 }
-
-
-getBike()  
-
-
-
-
-    
-
-
-
-
-
-
-// sbi(場站目前車輛數量)
-// sna(場站中文名稱)
-// ar(地點)
-
-/* <li class="list-group-item fs-5">
-  <i class="fas fa-bicycle"></i>
-  建國北路一段17巷 (20)<br>
-  <small class="text-muted">建國北路一段17巷/八德路二段137巷口</small>
-</li> */
